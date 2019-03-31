@@ -1,0 +1,76 @@
+<div class="container">
+    <h3>Transaction Stats</h3>
+    <div class="row" *ngIf="dates">
+        <div class="col-sm-12 col-md-4">
+            <select id="month_selector" class="form-control" (change)="onChangeDate($event.target.value)">
+                <option value="0">Select a month</option>
+                <option  *ngFor="let date of dates" value="{{ date }}">{{ date }}</option>
+            </select>
+        </div>
+    </div>
+</div>
+<div style="padding-top: 3%" id="stats_location" *ngIf="stats">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-xs-12">
+                <h4 class="small_section"><b>Somme des entrés et sorties des transactions du mois selectionné</b></h4>
+                <table>
+                    <tbody>
+                    <tr>
+                        <th>Input :</th>
+                        <td>{{ stats.inAndOutPerMonth.in|number : '1.2-2' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Output :</th>
+                        <td>{{ stats.inAndOutPerMonth.out|number : '1.2-2' }}</td>
+                    </tr>
+                    </tbody>
+                </table>        
+              </div>
+              <div class="col-md-6 col-xs-12">
+                  <h4 class="small_section"><b>Montant de la trésorerie par mois</b></h4>
+                  <table>
+                      <tbody>
+                          <tr *ngFor="let cash of stats.cashAmount;index as i">
+                              <th>Mois : {{ cash.transactionYear }}-{{ cash.transactionMonth }} </th>
+                              <td>(<b>Début</b> <span *ngIf="i >= 1">{{ stats.cashAmount[i-1].monthlyAmount|number : '1.2-2' }}</span><span *ngIf="i < 1">0</span>
+                                ,<b>Fin</b> : {{ cash.monthlyAmount|number : '1.2-2' }})</td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-xs-12">
+                <h4 class="small_section"><b>Liste des transactions du mois selectionné</b></h4>
+            </div>
+            <div class="col-md-12">
+                <table id="transactionsPerMonth" class="table table-striped table-bordered nowrap table-hover" style="width: 100%">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>In</th>
+                        <th>Catégorie</th>
+                        <th>Amount</th>
+                        <th>Description</th>
+                        <th>Date de création</th>
+                        <th>Tags</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let transaction of stats.transactionsPerMonth">
+                            <td>{{ transaction.title }}</td>
+                            <td *ngIf="transaction.isInput">Oui</td>
+                            <td *ngIf="! transaction.isInput">Oui</td>
+                            <td>{{ transaction.category.title }}</td>
+                            <td>{{ transaction.amount }}</td>
+                            <td>{{ transaction.description }}</td>
+                            <td>{{ transaction.created_at_prepared }}</td>
+                            <td>{{ transaction.tags_prepared }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+  </div>
